@@ -5,6 +5,9 @@ pub enum CrawlerError {
     #[error("Reqwest error: {0}")]
     ReqwestError(#[from] reqwest::Error),
 
+    #[error("Parse error: {0}")]
+    ParsingError(#[from] serde_json::Error),
+
     #[error("Authentication failed: {0}")]
     AuthError(#[from] AuthError),
 

@@ -5,7 +5,7 @@ async fn test_query_blogs() {
     let naver_blog_crawler = NaverBlogCralwer::new();
 
     let result = naver_blog_crawler
-        .get_blogs("일본여행 맛집", 1, 7, "all", "")
+        .get_blogs("일본여행 맛집", 140, 7, "all", "")
         .await
         .unwrap();
 

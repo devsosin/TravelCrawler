@@ -9,7 +9,7 @@ use crate::{
     Cralwer, CrawlerResult,
     naver_blog::dto::{
         query::{GetBlogListQuery, GetBlogQuery, OrderBy, RangeType},
-        response::{self, GetBlogListResponse},
+        response::GetBlogListResponse,
     },
 };
 
@@ -32,7 +32,7 @@ impl NaverBlogCralwer {
         size: u8,
         range: &str,
         order: &str,
-    ) -> CrawlerResult<()> {
+    ) -> CrawlerResult<GetBlogListResponse> {
         let query =
             GetBlogListQuery::new(keyword, page, size, RangeType::from(range), OrderBy::Sim);
 
@@ -51,11 +51,10 @@ impl NaverBlogCralwer {
             .await?;
 
         let data: GetBlogListResponse =
-            serde_json::from_str(response.text().await.unwrap().split_off(5).as_str())
-                .expect("Failed to parse Response");
-        println!("blog result: {:?}", data);
+            serde_json::from_str(response.text().await.unwrap().split_off(5).as_str())?;
+        // println!("blog result: {:?}", data);
 
-        Ok(())
+        Ok(data)
     }
 
     pub async fn get_blog(&self, blog_id: &str, post_no: &str) -> CrawlerResult<()> {
