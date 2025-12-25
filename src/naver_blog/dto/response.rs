@@ -10,6 +10,10 @@ impl GetBlogListResponse {
     pub fn get_posts(&self) -> &Vec<Post> {
         &self.result.search_list
     }
+
+    pub fn get_total_count(&self) -> u32 {
+        self.result.total_count
+    }
 }
 
 #[derive(Deserialize, Debug)]
@@ -19,7 +23,7 @@ pub struct BlogListData {
     // page_per_count: u8,
     // search_display_info: SearchDisplayInfo,
     search_list: Vec<Post>,
-    // total_count: u32,
+    total_count: u32,
 }
 
 #[derive(Deserialize, Debug)]
@@ -41,7 +45,7 @@ pub struct Post {
     add_date: u64,
     blog_name: String,
     // buy_with_my_own_money: bool,
-    // contents: String,
+    contents: String,
     // has_thumbnail: bool,
     log_no: u64,
     // market_post: bool,
@@ -58,6 +62,9 @@ impl Post {
     }
     pub fn get_title(&self) -> &str {
         &self.title
+    }
+    pub fn get_contents(&self) -> &str {
+        &self.contents
     }
     pub fn get_url(&self) -> &str {
         &self.post_url
