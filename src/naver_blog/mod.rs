@@ -33,8 +33,13 @@ impl NaverBlogCralwer {
         range: &str,
         order: &str,
     ) -> CrawlerResult<GetBlogListResponse> {
-        let query =
-            GetBlogListQuery::new(keyword, page, size, RangeType::from(range), OrderBy::Sim);
+        let query = GetBlogListQuery::new(
+            keyword,
+            page,
+            size,
+            RangeType::from(range),
+            OrderBy::from(order),
+        );
 
         let response = self
             .crawler
