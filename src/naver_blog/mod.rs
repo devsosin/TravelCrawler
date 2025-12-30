@@ -62,7 +62,7 @@ impl NaverBlogCralwer {
         Ok(data)
     }
 
-    pub async fn get_blog(&self, blog_id: &str, post_no: &str) -> CrawlerResult<()> {
+    pub async fn get_blog(&self, blog_id: &str, post_no: &str) -> CrawlerResult<String> {
         let query = GetBlogQuery::new(blog_id, post_no);
         let response = self.crawler.request("get", "https://blog.naver.com/PostView.naver?redirect=Dlog&widgetTypeCall=true&noTrackingCode=true&directAccess=false", &query)?.send().await?;
 
@@ -70,8 +70,8 @@ impl NaverBlogCralwer {
         let selector = Selector::parse(".se-main-container").unwrap();
 
         let content = html.select(&selector).next().unwrap().html();
-        println!("Blog Content: {:?}", content);
+        // println!("Blog Content: {:?}", content);
 
-        Ok(())
+        Ok(content)
     }
 }
