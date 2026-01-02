@@ -136,3 +136,19 @@ impl GetBlogQuery {
         }
     }
 }
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct GetHashtagQuery {
+    blog_id: String,
+    log_no_list: String,
+}
+
+impl GetHashtagQuery {
+    pub fn new(blog_id: &str, post_no: &str) -> Self {
+        Self {
+            blog_id: blog_id.into(),
+            log_no_list: post_no.into(),
+        }
+    }
+}

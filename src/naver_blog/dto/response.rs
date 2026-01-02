@@ -84,6 +84,45 @@ impl Post {
     }
 }
 
+#[derive(Debug)]
+pub struct BlogResponse {
+    content: String,
+    likes: u32,
+    comments: u32,
+    hashtags: Vec<String>,
+}
+
+impl BlogResponse {
+    pub fn new(content: String, likes: u32, comments: u32, hashtags: Vec<String>) -> Self {
+        Self {
+            content,
+            likes,
+            comments,
+            hashtags,
+        }
+    }
+    pub fn get_content(&self) -> &str {
+        &self.content
+    }
+    pub fn get_likes(&self) -> u32 {
+        self.likes
+    }
+    pub fn get_comments(&self) -> u32 {
+        self.comments
+    }
+    pub fn get_hashtags(&self) -> &Vec<String> {
+        &self.hashtags
+    }
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct Thumbnail {
+    url: String,
+    video_thumbnail: bool,
+    vrthumbnail: bool,
+}
+
 #[cfg(test)]
 mod tests {
     use chrono::DateTime;
@@ -96,12 +135,4 @@ mod tests {
         let dt = DateTime::from_timestamp(ts as i64, 0).unwrap();
         println!("DateTime: {:?}", dt)
     }
-}
-
-#[derive(Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct Thumbnail {
-    url: String,
-    video_thumbnail: bool,
-    vrthumbnail: bool,
 }
