@@ -90,20 +90,29 @@ impl NaverBlogCralwer {
 
         let html = Html::parse_document(response.text().await?.as_str());
         let selector = Selector::parse(".se-main-container").unwrap();
-        let content = html.select(&selector).next().unwrap().html();
+        let content = match html.select(&selector).next() {
+            Some(e) => e.html(),
+            None => {
+                let selector = Selector::parse(".post-view").unwrap();
+                match html.select(&selector).next() {
+                    Some(e) => e.html(),
+                    None => String::new(),
+                }
+            }
+        };
 
         let selector = Selector::parse("#commentCount").unwrap();
         let comments = html
             .select(&selector)
             .next()
             .and_then(|n| n.text().nth(0))
-            .unwrap()
+            .unwrap_or("0")
             .trim();
 
         // println!("Blog Content: {:?}", content);
         // println!("Blog Comments: {:?}", comments);
 
-        Ok((content, comments.parse().unwrap()))
+        Ok((content, comments.parse().unwrap_or(0)))
     }
 
     async fn get_hashtags(&self, blog_id: &str, post_no: &str) -> CrawlerResult<Vec<String>> {
@@ -119,7 +128,10 @@ impl NaverBlogCralwer {
             .await?;
 
         let hashtags = res.json::<Value>().await?;
-        let hashtags = hashtags["taglist"][0]["encTagName"].as_str().unwrap();
+        let hashtags = match hashtags["taglist"][0]["encTagName"].as_str() {
+            Some(h) => h,
+            None => "",
+        };
         let bytes = decode_binary(hashtags.as_bytes());
         let (decoded, _, _) = EUC_KR.decode(&bytes);
 
@@ -140,9 +152,8 @@ impl NaverBlogCralwer {
             .send()
             .await?;
 
-        let likes = res
-            .text()
-            .await?
+        let body = res.text().await?;
+        let likes = &body
             .split("count\":")
             .last()
             .unwrap()
@@ -151,6 +162,6 @@ impl NaverBlogCralwer {
             .unwrap()
             .to_string();
 
-        Ok(likes.parse().unwrap())
+        Ok(likes.parse().unwrap_or(0))
     }
 }
