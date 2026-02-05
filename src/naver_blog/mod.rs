@@ -75,7 +75,7 @@ impl NaverBlogCralwer {
 
         let (content, comments) = blog_detail.unwrap();
         let likes = likes.unwrap();
-        let hashtags = hashtags.unwrap();
+        let hashtags = hashtags.unwrap_or(vec![]);
 
         Ok(BlogResponse::new(content, likes, comments, hashtags))
     }
